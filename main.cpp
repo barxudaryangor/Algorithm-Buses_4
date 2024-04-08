@@ -198,34 +198,35 @@ int main()
     string operation;  // Operation to perform
     while (cin >> operation) 
     {
-        if (operation == "add_bus") 
-        {
-            int k, A;
-            cin >> k >> A;  // Input number of destinations and starting vertex
+    if (operation == "add_bus") 
+    {
+    int k, A;
+    cin >> k >> A;  // Input number of destinations and starting vertex
 
-            vector<pair<int, int>> destination_times;  // Vector to store destinations and durations
+    vector<pair<int, int>> destination_times;  // Vector to store destinations and durations
 
-            // Input destinations and initialize durations to 0
-            for (int i = 0; i < k; ++i) 
-            {
-                int B;
-                cin >> B;
-                destination_times.push_back({B, 0});  // Add destination with initial duration 0
-            }
+    // Input destinations and initialize durations from the specified starting vertex
+    for (int i = 0; i < k; ++i) 
+    {
+        int B;
+        cin >> B;
+        int duration = shortestPaths[A][B];  // Duration from starting vertex to destination
+        destination_times.push_back({B, duration});  // Add destination with its duration
+    }
 
-            cout << endl;
-            cout << "Bus " << buses.size() << " updated destinations and durations:" << endl;
+    cout << endl;
+    cout << "Bus " << buses.size() << " updated destinations and durations:" << endl;
 
-            // Update durations and print updated destinations and durations
-            for (const auto& dest_time : destination_times) 
-            {
-                int destination = dest_time.first;
-                int duration = shortestPaths[A][destination];  // Duration from starting vertex to destination
-                cout << "Destination: " << destination << ", Duration: " << duration << endl;
-            }
+    // Print updated destinations and durations
+    for (const auto& dest_time : destination_times) 
+    {
+        int destination = dest_time.first;
+        int duration = dest_time.second;
+        cout << "Destination: " << destination << ", Duration: " << duration << endl;
+    }
 
-            buses.push_back(destination_times);  // Add bus with updated destinations and durations
-        }
+    buses.push_back(destination_times);  // Add bus with updated destinations and durations
+    }
         else if (operation == "construct_crossroad") 
         {
             int k;
