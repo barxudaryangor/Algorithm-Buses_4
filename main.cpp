@@ -192,41 +192,40 @@ int main()
 
     // Compute all pairs shortest paths using Floyd Warshall algorithm
     vector<vector<int>> shortestPaths = floydWarshall(graph, N);
-
     vector<vector<pair<int, int>>> buses;  // Vector to store buses and their destinations
-
     string operation;  // Operation to perform
     while (cin >> operation) 
     {
-    if (operation == "add_bus") 
-    {
-    int k, A;
-    cin >> k >> A;  // Input number of destinations and starting vertex
+        if (operation == "add_bus") 
+        {
+            int k, A;
+            cin >> k >> A;  // Input number of destinations and starting vertex
 
-    vector<pair<int, int>> destination_times;  // Vector to store destinations and durations
+            vector<pair<int, int>> destination_times;  // Vector to store destinations and durations
 
-    // Input destinations and initialize durations from the specified starting vertex
-    for (int i = 0; i < k; ++i) 
-    {
-        int B;
-        cin >> B;
-        int duration = shortestPaths[A][B];  // Duration from starting vertex to destination
-        destination_times.push_back({B, duration});  // Add destination with its duration
-    }
+            // Input destinations and initialize durations from the specified starting vertex
+            for (int i = 0; i < k; ++i) 
+            {
+                int B;
+                cin >> B;
+                int duration = shortestPaths[A][B];  // Duration from starting vertex to destination
+                if (duration == INF) {
+                    duration = 0;  // Set duration to 0 if there's no path
+                }
+                destination_times.push_back({B, duration});  // Add destination with its duration
+            }
+            cout << endl;
+            cout << "Bus " << buses.size() << " updated destinations and durations:" << endl;
 
-    cout << endl;
-    cout << "Bus " << buses.size() << " updated destinations and durations:" << endl;
-
-    // Print updated destinations and durations
-    for (const auto& dest_time : destination_times) 
-    {
-        int destination = dest_time.first;
-        int duration = dest_time.second;
-        cout << "Destination: " << destination << ", Duration: " << duration << endl;
-    }
-
-    buses.push_back(destination_times);  // Add bus with updated destinations and durations
-    }
+            // Print updated destinations and durations
+            for (const auto& dest_time : destination_times) 
+            {
+                int destination = dest_time.first;
+                int duration = dest_time.second;
+                cout << "Destination: " << destination << ", Duration: " << duration << endl;
+            }
+            buses.push_back(destination_times);  // Add bus with updated destinations and durations
+        }
         else if (operation == "construct_crossroad") 
         {
             int k;
@@ -250,7 +249,6 @@ int main()
                 int duration = newCrossRoad[i * 3 + 2];
                 graph[u].push_back({v, duration});  // Add directed edge from u to v with weight duration
             }
-
             // Recompute all pairs shortest paths using Floyd Warshall algorithm
             shortestPaths.assign(N, vector<int>(N, 0));
             shortestPaths = floydWarshall(graph, N);
@@ -263,6 +261,9 @@ int main()
                 {
                     int destination = dest_time.first;
                     int duration = shortestPaths[dest_time.second][destination];  // Duration from source to destination
+                    if (duration == INF) {
+                        duration = 0; // Set duration to 0 if there's no path
+                    }
                     cout << "Destination: " << destination << ", Duration: " << duration << endl;
                 }
                 cout << endl;
@@ -294,13 +295,13 @@ int main()
             findCommonSegments(shortestPathsI, shortestPathsJ);
         }
     }
-
     return 0;
 }
 
 
+
 /*
-Test 1
+Test 1 (presentation)
 12 15
 0 1 1
 0 6 2
@@ -318,5 +319,37 @@ Test 1
 10 9 11
 11 10 5
 
+add_bus 3 0 4 7 11
+add_bus 3 0 9 3 8
+
+construct_crossroad 2 0 9 10 0 7 4
+
+common_streets 0 1
+______________________________________________________
+Test 2
+12 16
+0 1 10
+0 3 6
+0 4 5
+1 2 2
+2 3 4
+2 5 19
+2 6 9
+2 7 5
+4 2 12
+5 6 7
+6 11 4
+6 7 8
+8 2 10
+9 8 7
+9 10 5
+11 10 7
+
+add_bus 2 0 8 9 (can’t go)
+add_bus 2 0 2 5
+
+common-streets 0 1
+
+construct_crossroad 1 0 8 10
 
 */
